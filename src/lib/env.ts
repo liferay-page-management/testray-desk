@@ -1,0 +1,2 @@
+export const TESTRAY_CLIENT_ID = process.env.TESTRAY_CLIENT_ID
+export const TESTRAY_CLIENT_SECRET = process.env.TESTRAY_CLIENT_SECRET
