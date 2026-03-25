@@ -1,0 +1,9 @@
+{
+	"files.associations": {
+		"*.css": "tailwindcss"
+	},
+	"files.exclude": {
+		"**/.vscode": true
+	},
+	"tailwindCSS.lint.suggestCanonicalClasses": "ignore"
+}
