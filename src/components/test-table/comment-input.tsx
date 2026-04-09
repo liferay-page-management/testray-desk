@@ -25,12 +25,6 @@ export function CommentInput({ testResult }: { testResult: TestResult }) {
 	}
 
 	const onBlur = async () => {
-		if (value === comment) {
-			setIsEditing(false)
-
-			return
-		}
-
 		setLoading(true)
 
 		const { error } = await NextClient.patch('/api/update-case-result', {
