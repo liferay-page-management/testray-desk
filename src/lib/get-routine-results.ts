@@ -9,6 +9,7 @@ import { Case, CaseResult, Routine } from '@/types/testray'
 
 import { getTestResult } from './get-test-result'
 import { inheritMetadata } from './inherit-metadata'
+import { hasHistory } from './test-history'
 import { getTypeWeight } from './test-type'
 
 export async function getRoutineResults(routineId: Routine['id']): Promise<{
@@ -46,11 +47,7 @@ export async function getRoutineResults(routineId: Routine['id']): Promise<{
 
 	const histories = await getCaseHistories({
 		caseIds: cases
-			.filter(
-				(testCase) =>
-					testCase.name !== 'Top Level Build' &&
-					!testCase.name.includes('PortalLogAssertor')
-			)
+			.filter((testCase) => hasHistory(testCase))
 			.map((testCase) => testCase.id),
 		routineId,
 	})

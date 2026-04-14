@@ -1,6 +1,8 @@
 import { TestResult } from '@/types/test-result'
 import { Case, CaseResult, CaseType, History } from '@/types/testray'
 
+import { parseHistory } from './test-history'
+
 export function getTestResult({
 	caseResult,
 	testCase,
@@ -22,7 +24,7 @@ export function getTestResult({
 		caseResultId: caseResult.id,
 		caseId: testCase.id,
 		name: testCase.name,
-		history: history && getHistory(history),
+		history: history && parseHistory(history),
 		status: caseResult.dueStatus.key,
 		type,
 		isNew,
@@ -49,13 +51,6 @@ function getType(testCase: Case, types: CaseType[]): TestResult['type'] {
 	)
 
 	return type!.name
-}
-
-function getHistory(history: History): TestResult['history'] {
-	return history.map((item) => ({
-		date: item.executionDate,
-		status: item.status,
-	}))
 }
 
 function parseAttachments(attachments: CaseResult['attachments']) {
