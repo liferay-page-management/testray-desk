@@ -30,20 +30,24 @@ import { getStatusBadge } from '@/lib/test-status'
 import { getTypeIcon, getTypeLabel } from '@/lib/test-type'
 
 import { TestResult } from '@/types/test-result'
+import { Routine } from '@/types/testray'
 import { User } from '@/types/user'
 
 import { ActionsMenu } from './actions-menu'
 import { AssigneeSelect } from './assignee-select'
 import { ColumnCustomizer } from './column-customizer'
 import { CommentInput } from './comment-input'
+import { History } from './history'
 import { Pagination } from './pagination'
 
 export function TestTable({
 	results,
 	users,
+	routineId,
 }: {
 	results: TestResult[]
 	users: User[]
+	routineId: Routine['id']
 }) {
 	const [pagination, setPagination] = useState<PaginationState>({
 		pageIndex: 0,
@@ -120,19 +124,9 @@ export function TestTable({
 			{
 				accessorKey: 'history',
 				header: 'History',
-				cell: ({ row }) => {
-					if (!row.original.history) {
-						return ''
-					}
-
-					const total = row.original.history.length
-
-					const failed = row.original.history.filter(
-						(entry) => entry.status === 'FAILED'
-					).length
-
-					return `Failed ${failed} of last ${total}`
-				},
+				cell: ({ row }) => (
+					<History testResult={row.original} routineId={routineId} />
+				),
 			},
 			{
 				accessorKey: 'comment',
@@ -157,7 +151,7 @@ export function TestTable({
 				),
 			},
 		],
-		[users]
+		[users, routineId]
 	)
 
 	const table = useReactTable({

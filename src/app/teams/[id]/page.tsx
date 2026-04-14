@@ -36,7 +36,11 @@ export default function Page() {
 		<div className="flex flex-col gap-6 p-6">
 			<Summary date={date} results={results} />
 
-			<TestTable results={results} users={team.users} />
+			<TestTable
+				results={results}
+				users={team.users}
+				routineId={team.routineId}
+			/>
 		</div>
 	)
 }
