@@ -45,12 +45,15 @@ export async function getRoutineResults(routineId: Routine['id']): Promise<{
 
 	const caseTypes = await getCaseTypes(caseTypeIds)
 
-	const histories = await getCaseHistories({
-		caseIds: cases
-			.filter((testCase) => hasHistory(testCase))
-			.map((testCase) => testCase.id),
-		routineId,
-	})
+	const histories =
+		cases.length > 50
+			? new Map()
+			: await getCaseHistories({
+					caseIds: cases
+						.filter((testCase) => hasHistory(testCase))
+						.map((testCase) => testCase.id),
+					routineId,
+				})
 
 	const casesMap = new Map(cases.map((caseItem) => [caseItem.id, caseItem]))
 
