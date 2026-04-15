@@ -13,6 +13,8 @@ export function nextRoute<TArgs extends unknown[]>({
 		try {
 			return await handler(request, ...args)
 		} catch (e) {
+			console.error(e)
+
 			if (e instanceof TestrayException) {
 				return NextResponse.json(
 					{ error: e.message },
