@@ -32,7 +32,7 @@ export function AssigneeSelect({
 	)
 	const [loading, setLoading] = useState(false)
 
-	if (testResult.status !== 'FAILED') {
+	if (testResult.status === 'PASSED') {
 		return null
 	}
 

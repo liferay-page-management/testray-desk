@@ -20,7 +20,7 @@ export function CommentInput({ testResult }: { testResult: TestResult }) {
 
 	const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-	if (testResult.status !== 'FAILED') {
+	if (testResult.status === 'PASSED') {
 		return null
 	}
 

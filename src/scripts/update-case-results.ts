@@ -12,9 +12,9 @@ async function updateCaseResults(routineId: Routine['id']) {
 		limit: 2,
 	})
 
-	const previousDayFailures = await getBuildCaseResults({
+	const previousDayIssues = await getBuildCaseResults({
 		buildId: previousDayBuild.id,
-		statuses: ['FAILED'],
+		statuses: ['FAILED', 'BLOCKED', 'UNTESTED'],
 	})
 
 	const caseResults = await getBuildCaseResults({
@@ -23,7 +23,7 @@ async function updateCaseResults(routineId: Routine['id']) {
 	})
 
 	for (const caseResult of caseResults) {
-		await inheritMetadata(previousDayFailures, caseResult)
+		await inheritMetadata(previousDayIssues, caseResult)
 	}
 }
 

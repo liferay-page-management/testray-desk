@@ -21,9 +21,9 @@ export async function getRoutineResults(routineId: Routine['id']): Promise<{
 		limit: 2,
 	})
 
-	const previousDayFailures = await getBuildCaseResults({
+	const previousDayIssues = await getBuildCaseResults({
 		buildId: previousDayBuild.id,
-		statuses: ['FAILED'],
+		statuses: ['FAILED', 'BLOCKED', 'UNTESTED'],
 	})
 
 	const caseResults = await getBuildCaseResults({
@@ -68,11 +68,11 @@ export async function getRoutineResults(routineId: Routine['id']): Promise<{
 			continue
 		}
 
-		caseResult = await inheritMetadata(previousDayFailures, caseResult)
+		caseResult = await inheritMetadata(previousDayIssues, caseResult)
 
 		const history = histories.get(testCase.id) ?? null
 
-		const isNew = isNewFailure(caseResult, testCase, previousDayFailures)
+		const isNew = isNewFailure(caseResult, testCase, previousDayIssues)
 
 		const result = getTestResult({
 			caseResult,
@@ -93,14 +93,14 @@ export async function getRoutineResults(routineId: Routine['id']): Promise<{
 function isNewFailure(
 	caseResult: CaseResult,
 	testCase: Case,
-	previousCaseResults: CaseResult[]
+	previousDayIssues: CaseResult[]
 ) {
 	if (caseResult.dueStatus.key !== 'FAILED') {
 		return false
 	}
 
 	const caseIds = new Set(
-		previousCaseResults.map(
+		previousDayIssues.map(
 			(caseResult) => caseResult.r_caseToCaseResult_c_caseId
 		)
 	)

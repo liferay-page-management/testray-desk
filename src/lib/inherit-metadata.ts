@@ -3,10 +3,10 @@ import { updateCaseResult } from '@/services/case-result'
 import { CaseResult } from '@/types/testray'
 
 export async function inheritMetadata(
-	previousDayFailures: CaseResult[],
+	previousDayIssues: CaseResult[],
 	caseResult: CaseResult
 ) {
-	const previousDayCaseResult = previousDayFailures.find(
+	const previousDayCaseResult = previousDayIssues.find(
 		({ r_caseToCaseResult_c_caseId }) =>
 			r_caseToCaseResult_c_caseId ===
 			caseResult.r_caseToCaseResult_c_caseId
