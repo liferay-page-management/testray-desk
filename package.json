@@ -7,6 +7,7 @@
 		"build": "next build",
 		"start": "next start",
 		"format": "prettier --write .",
+		"job:daily-summary": "tsx --env-file=.env.local src/scripts/daily-summary.ts",
 		"job:update-case-results": "tsx src/scripts/update-case-results.ts"
 	},
 	"dependencies": {
