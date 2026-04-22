@@ -14,9 +14,17 @@ function formatResult(result: TestResult): string {
 		? result.links.playwrightReport
 		: result.links.failureMessages
 
-	const title = link ? `<${link}|${result.name}>` : result.name
+	const name = escapeSlackText(result.name)
+	const title = link ? `<${link}|${name}>` : name
 
 	return `• ${emoji} ${title}`
+}
+
+function escapeSlackText(text: string): string {
+	return text
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
 }
 
 function buildRoutineLink(routineId: Routine['id']) {
