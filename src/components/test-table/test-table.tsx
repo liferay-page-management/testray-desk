@@ -51,7 +51,7 @@ export function TestTable({
 }) {
 	const [pagination, setPagination] = useState<PaginationState>({
 		pageIndex: 0,
-		pageSize: 20,
+		pageSize: 50,
 	})
 
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
