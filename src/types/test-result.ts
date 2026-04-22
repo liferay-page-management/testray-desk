@@ -14,5 +14,6 @@ export type TestResult = {
 	links: {
 		failureMessages?: string
 		playwrightReport?: string
+		jenkinsConsole?: string
 	}
 }

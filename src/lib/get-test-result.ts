@@ -38,6 +38,7 @@ function getLinks(attachments: CaseResult['attachments']): TestResult['links'] {
 	return {
 		playwrightReport: parsedAttachaments['Playwright Report']?.url,
 		failureMessages: parsedAttachaments['Failure Messages']?.url,
+		jenkinsConsole: parsedAttachaments['Jenkins Console']?.url,
 	}
 }
 

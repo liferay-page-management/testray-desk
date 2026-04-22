@@ -79,5 +79,22 @@ function getOptions(testResult: TestResult) {
 		})
 	}
 
+	if (
+		testResult.links.jenkinsConsole &&
+		!['Playwright Test', 'JS Unit Test'].includes(testResult.type)
+	) {
+		options.push({
+			label: 'Jenkins Console',
+			icon: <IconExternalLink />,
+			onSelect: () => {
+				window.open(
+					testResult.links.jenkinsConsole,
+					'_blank',
+					'noopener,noreferrer'
+				)
+			},
+		})
+	}
+
 	return options
 }
