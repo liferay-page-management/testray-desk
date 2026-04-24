@@ -7,7 +7,8 @@ export type TestResult = {
 	caseResultId: number
 	caseId: Case['id']
 	name: string
-	history: Array<{ date: string; status: Status }> | null
+	errors?: string
+	history: Array<{ date: string; gitHash: string; status: Status }> | null
 	status: CaseResult['dueStatus']['key']
 	type: CaseType['name'] | 'Java Log Assertor'
 	isNew: boolean

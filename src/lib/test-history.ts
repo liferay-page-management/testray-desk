@@ -11,6 +11,7 @@ export function hasHistory(testCase: { name: string }) {
 export function parseHistory(history: History): TestResult['history'] {
 	return history.map((item) => ({
 		date: item.executionDate,
+		gitHash: item.gitHash,
 		status: item.status,
 	}))
 }

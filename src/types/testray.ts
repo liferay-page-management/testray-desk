@@ -7,6 +7,7 @@ export type Routine = {
 
 export type Build = {
 	dateCreated: string
+	gitHash: string
 	id: number
 }
 
@@ -14,6 +15,7 @@ export type CaseResult = {
 	id: number
 	dueStatus: { key: Status }
 	comment?: string
+	errors?: string
 	r_caseToCaseResult_c_caseId: number
 	r_userToCaseResults_userId?: number
 	attachments?: string
@@ -40,6 +42,7 @@ export type CaseType = {
 
 export type History = Array<{
 	executionDate: string
+	gitHash: string
 	status: Status
 	testrayRoutineId: Routine['id']
 }>

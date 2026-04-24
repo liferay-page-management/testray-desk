@@ -22,24 +22,25 @@ export default function Page() {
 
 	const routineId = team?.routineId ?? null
 
-	const { loading, date, error, results } = useRoutineResults(routineId)
+	const { loading, build, error, results } = useRoutineResults(routineId)
 
 	if (!team || error) {
 		return <Error message={error} />
 	}
 
-	if (loading) {
+	if (loading || !build) {
 		return <Loading />
 	}
 
 	return (
 		<div className="flex flex-col gap-6 p-6">
-			<Summary date={date} results={results} />
+			<Summary date={build.date} results={results} />
 
 			<TestTable
 				results={results}
 				users={team.users}
 				routineId={team.routineId}
+				build={build}
 			/>
 		</div>
 	)

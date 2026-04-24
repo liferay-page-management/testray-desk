@@ -3,18 +3,20 @@ import { useCallback, useEffect, useState } from 'react'
 import { NextClient } from '@/lib/next-client'
 
 import { TestResult } from '@/types/test-result'
-import { Routine } from '@/types/testray'
+import { Build, Routine } from '@/types/testray'
+
+type RoutineBuild = { id: Build['id']; date: string; gitHash: string }
 
 export function useRoutineResults(routineId: Routine['id'] | null): {
 	loading: boolean
 	results: TestResult[]
-	date: string
+	build: RoutineBuild | null
 	error: string | null
 	refresh: () => Promise<void>
 } {
 	const [loading, setLoading] = useState(routineId != null)
 	const [results, setResults] = useState<TestResult[]>([])
-	const [date, setDate] = useState('')
+	const [build, setBuild] = useState<RoutineBuild | null>(null)
 	const [error, setError] = useState<string | null>(null)
 
 	const refresh = useCallback(async () => {
@@ -23,16 +25,16 @@ export function useRoutineResults(routineId: Routine['id'] | null): {
 
 		const { data, error } = await NextClient.get<{
 			results: TestResult[]
-			date: string
+			build: RoutineBuild
 		}>(`/api/routine-results/${routineId}`)
 
 		if (error || !data) {
 			setResults([])
-			setDate('')
+			setBuild(null)
 			setError(error?.message ?? null)
 		} else {
 			setResults(data.results || [])
-			setDate(data.date)
+			setBuild(data.build)
 			setError(null)
 		}
 
@@ -51,5 +53,5 @@ export function useRoutineResults(routineId: Routine['id'] | null): {
 		load()
 	}, [refresh, routineId])
 
-	return { loading, results, date, error, refresh }
+	return { loading, results, build, error, refresh }
 }

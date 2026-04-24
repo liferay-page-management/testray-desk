@@ -5,7 +5,7 @@ import { getCaseTypes } from '@/services/case-type'
 import { getCaseHistories } from '@/services/history'
 
 import { TestResult } from '@/types/test-result'
-import { Case, CaseResult, Routine } from '@/types/testray'
+import { Build, Case, CaseResult, Routine } from '@/types/testray'
 
 import { getTestResult } from './get-test-result'
 import { inheritMetadata } from './inherit-metadata'
@@ -14,7 +14,7 @@ import { getTypeWeight } from './test-type'
 
 export async function getRoutineResults(routineId: Routine['id']): Promise<{
 	results: TestResult[]
-	date: string
+	build: { id: Build['id']; date: string; gitHash: string }
 }> {
 	const [lastBuild, previousDayBuild] = await getRoutineBuilds({
 		routineId,
@@ -87,7 +87,14 @@ export async function getRoutineResults(routineId: Routine['id']): Promise<{
 
 	sortResults(results)
 
-	return { results, date: lastBuild.dateCreated }
+	return {
+		results,
+		build: {
+			id: lastBuild.id,
+			date: lastBuild.dateCreated,
+			gitHash: lastBuild.gitHash,
+		},
+	}
 }
 
 function isNewFailure(
