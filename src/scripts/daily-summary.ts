@@ -1,11 +1,20 @@
+import { getRoutineBuilds } from '@/services/build'
+import fs from 'node:fs'
+import path from 'node:path'
+
 import { getRoutineResults } from '@/lib/get-routine-results'
 import { TEAMS } from '@/lib/teams'
 
 import { TestResult } from '@/types/test-result'
-import { Routine } from '@/types/testray'
+import { Build, Routine } from '@/types/testray'
 
 const EMOJI_PLAYWRIGHT = ':playwright:'
 const EMOJI_JAVA = ':java:'
+
+const LAST_REPORTED_BUILD_ID_FILE = path.join(
+	process.cwd(),
+	'.last-reported-build-id'
+)
 
 function formatResult(result: TestResult): string {
 	const isPlaywright = result.type === 'Playwright Test'
@@ -31,8 +40,38 @@ function buildRoutineLink(routineId: Routine['id']) {
 	return `https://testray.liferay.com/#/project/35392/routines/${routineId}`
 }
 
+function readLastReportedBuildId(): Build['id'] | null {
+	try {
+		const content = fs
+			.readFileSync(LAST_REPORTED_BUILD_ID_FILE, 'utf-8')
+			.trim()
+		const id = Number(content)
+
+		return Number.isFinite(id) ? id : null
+	} catch {
+		return null
+	}
+}
+
+function writeLastReportedBuildId(id: Build['id']): void {
+	fs.writeFileSync(LAST_REPORTED_BUILD_ID_FILE, String(id))
+}
+
 async function main() {
 	const team = TEAMS['page-management']
+
+	const [latestBuild] = await getRoutineBuilds({
+		routineId: team.routineId,
+		limit: 1,
+	})
+
+	if (!latestBuild) {
+		return
+	}
+
+	if (readLastReportedBuildId() === latestBuild.id) {
+		return
+	}
 
 	const { results } = await getRoutineResults(team.routineId)
 
@@ -60,6 +99,8 @@ async function main() {
 	}
 
 	process.stdout.write(lines.join('\n'))
+
+	writeLastReportedBuildId(latestBuild.id)
 }
 
 main().catch((err) => {
