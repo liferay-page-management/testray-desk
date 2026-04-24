@@ -24,6 +24,7 @@ export function getTestResult({
 		caseResultId: caseResult.id,
 		caseId: testCase.id,
 		name: testCase.name,
+		errors: caseResult.errors,
 		history: history && parseHistory(history),
 		status: caseResult.dueStatus.key,
 		type,

@@ -30,7 +30,7 @@ import { getStatusBadge } from '@/lib/test-status'
 import { getTypeIcon, getTypeLabel } from '@/lib/test-type'
 
 import { TestResult } from '@/types/test-result'
-import { Routine } from '@/types/testray'
+import { Build, Routine } from '@/types/testray'
 import { User } from '@/types/user'
 
 import { ActionsMenu } from './actions-menu'
@@ -45,10 +45,12 @@ export function TestTable({
 	results,
 	users,
 	routineId,
+	build,
 }: {
 	results: TestResult[]
 	users: User[]
 	routineId: Routine['id']
+	build: { id: Build['id']; date: string; gitHash: string }
 }) {
 	const [pagination, setPagination] = useState<PaginationState>({
 		pageIndex: 0,
@@ -186,7 +188,7 @@ export function TestTable({
 				/>
 
 				<div className="flex items-center gap-2">
-					<ExportButton results={visibleItems} />
+					<ExportButton results={visibleItems} build={build} />
 
 					<ColumnCustomizer
 						table={table}
