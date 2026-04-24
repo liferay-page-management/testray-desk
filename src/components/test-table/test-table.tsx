@@ -37,6 +37,7 @@ import { ActionsMenu } from './actions-menu'
 import { AssigneeSelect } from './assignee-select'
 import { ColumnCustomizer } from './column-customizer'
 import { CommentInput } from './comment-input'
+import { ExportButton } from './export-button'
 import { History } from './history'
 import { Pagination } from './pagination'
 
@@ -184,11 +185,15 @@ export function TestTable({
 					setColumnFilters={setColumnFilters}
 				/>
 
-				<ColumnCustomizer
-					table={table}
-					columnVisibility={columnVisibility}
-					setColumnVisibility={setColumnVisibility}
-				/>
+				<div className="flex items-center gap-2">
+					<ExportButton results={visibleItems} />
+
+					<ColumnCustomizer
+						table={table}
+						columnVisibility={columnVisibility}
+						setColumnVisibility={setColumnVisibility}
+					/>
+				</div>
 			</div>
 
 			<div className="rounded-lg border">
