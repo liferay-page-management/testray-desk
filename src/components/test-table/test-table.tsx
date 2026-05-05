@@ -57,9 +57,9 @@ export function TestTable({
 		pageSize: 50,
 	})
 
-	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
-		{}
-	)
+	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+		errors: false,
+	})
 
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
@@ -123,6 +123,16 @@ export function TestTable({
 						</code>
 					</div>
 				),
+			},
+			{
+				accessorKey: 'errors',
+				header: 'Trace',
+				cell: ({ row }) =>
+					row.original.errors ? (
+						<pre className="max-h-32 max-w-full overflow-auto whitespace-pre-wrap break-all rounded-md border border-border bg-muted p-2 font-mono text-xs">
+							{row.original.errors}
+						</pre>
+					) : null,
 			},
 			{
 				accessorKey: 'history',
@@ -266,6 +276,10 @@ function TestType({ type }: { type: TestResult['type'] }) {
 function getCellStyle(id: string) {
 	if (id === 'name') {
 		return { minWidth: '200px', maxWidth: '500px' }
+	}
+
+	if (id === 'errors') {
+		return { width: '400px', minWidth: '400px', maxWidth: '400px' }
 	}
 
 	if (id === 'comment') {
