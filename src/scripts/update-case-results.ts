@@ -37,11 +37,15 @@ async function updateCaseResults(routineId: Routine['id']) {
 	})
 
 	if (!lastBuild) {
-		return false
+		process.stdout.write('false')
+
+		return
 	}
 
 	if (readLastReportedBuildId() === lastBuild.id) {
-		return false
+		process.stdout.write('false')
+
+		return
 	}
 
 	const previousDayIssues = await getBuildCaseResults({
