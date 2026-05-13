@@ -76,12 +76,22 @@ async function main() {
 	const { results } = await getRoutineResults(team.routineId)
 
 	const failures = results.filter((result) => result.status === 'FAILED')
+	const blocked = results.filter((result) => result.status === 'BLOCKED')
+	const untested = results.filter((result) => result.status === 'UNTESTED')
 	const newFailures = failures.filter((result) => result.isNew)
 	const existingFailuresCount = failures.length - newFailures.length
 
 	const routineUrl = buildRoutineLink(team.routineId)
 
-	const header = `<${routineUrl}|Routine result> · ${newFailures.length} new / ${failures.length} total failures`
+	let header = `<${routineUrl}|Routine result> · ${newFailures.length} new / ${failures.length} total failures`
+
+	if (blocked.length > 0) {
+		header += ` | ${blocked.length} blocked`
+	}
+
+	if (untested.length > 0) {
+		header += ` | ${untested.length} untested`
+	}
 
 	const lines: string[] = [header]
 
