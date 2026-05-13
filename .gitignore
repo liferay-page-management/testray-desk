@@ -41,4 +41,7 @@ yarn-error.log*
 next-env.d.ts
 
 # daily-summary state
+.last-processed-summary-build-id
+
+# update-case-results state
 .last-reported-build-id

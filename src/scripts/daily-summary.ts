@@ -11,9 +11,9 @@ import { Build, Routine } from '@/types/testray'
 const EMOJI_PLAYWRIGHT = ':playwright:'
 const EMOJI_JAVA = ':java:'
 
-const LAST_REPORTED_BUILD_ID_FILE = path.join(
+const LAST_PROCESSED_SUMMARY_BUILD_ID_FILE = path.join(
 	process.cwd(),
-	'.last-reported-build-id'
+	'.last-processed-summary-build-id'
 )
 
 function formatResult(result: TestResult): string {
@@ -40,10 +40,10 @@ function buildRoutineLink(routineId: Routine['id']) {
 	return `https://testray.liferay.com/#/project/35392/routines/${routineId}`
 }
 
-function readLastReportedBuildId(): Build['id'] | null {
+function readLastProcessedSummaryBuildId(): Build['id'] | null {
 	try {
 		const content = fs
-			.readFileSync(LAST_REPORTED_BUILD_ID_FILE, 'utf-8')
+			.readFileSync(LAST_PROCESSED_SUMMARY_BUILD_ID_FILE, 'utf-8')
 			.trim()
 		const id = Number(content)
 
@@ -53,8 +53,8 @@ function readLastReportedBuildId(): Build['id'] | null {
 	}
 }
 
-function writeLastReportedBuildId(id: Build['id']): void {
-	fs.writeFileSync(LAST_REPORTED_BUILD_ID_FILE, String(id))
+function writeLastProcessedSummaryBuildId(id: Build['id']): void {
+	fs.writeFileSync(LAST_PROCESSED_SUMMARY_BUILD_ID_FILE, String(id))
 }
 
 async function main() {
@@ -69,7 +69,7 @@ async function main() {
 		return
 	}
 
-	if (readLastReportedBuildId() === latestBuild.id) {
+	if (readLastProcessedSummaryBuildId() === latestBuild.id) {
 		return
 	}
 
@@ -100,7 +100,7 @@ async function main() {
 
 	process.stdout.write(lines.join('\n'))
 
-	writeLastReportedBuildId(latestBuild.id)
+	writeLastProcessedSummaryBuildId(latestBuild.id)
 }
 
 main().catch((err) => {
