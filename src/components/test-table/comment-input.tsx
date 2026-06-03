@@ -8,10 +8,17 @@ import { Textarea } from '@/components/ui/textarea'
 import { NextClient } from '@/lib/next-client'
 
 import { TestResult } from '@/types/test-result'
+import { Routine } from '@/types/testray'
 
 import { Spinner } from '../ui/spinner'
 
-export function CommentInput({ testResult }: { testResult: TestResult }) {
+export function CommentInput({
+	testResult,
+	routineId,
+}: {
+	testResult: TestResult
+	routineId: Routine['id']
+}) {
 	const comment = testResult.comment ?? ''
 
 	const [isEditing, setIsEditing] = useState(false)
@@ -29,6 +36,7 @@ export function CommentInput({ testResult }: { testResult: TestResult }) {
 
 		const { error } = await NextClient.patch('/api/update-case-result', {
 			id: testResult.caseResultId,
+			routineId,
 			comment: value,
 		})
 
