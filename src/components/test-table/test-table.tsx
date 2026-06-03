@@ -144,13 +144,22 @@ export function TestTable({
 			{
 				accessorKey: 'comment',
 				header: 'Comment',
-				cell: ({ row }) => <CommentInput testResult={row.original} />,
+				cell: ({ row }) => (
+					<CommentInput
+						testResult={row.original}
+						routineId={routineId}
+					/>
+				),
 			},
 			{
 				accessorKey: 'assignee',
 				header: 'Assignee',
 				cell: ({ row }) => (
-					<AssigneeSelect testResult={row.original} users={users} />
+					<AssigneeSelect
+						testResult={row.original}
+						users={users}
+						routineId={routineId}
+					/>
 				),
 			},
 			{

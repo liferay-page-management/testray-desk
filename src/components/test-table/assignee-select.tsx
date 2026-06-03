@@ -16,14 +16,17 @@ import { Spinner } from '@/components/ui/spinner'
 import { NextClient } from '@/lib/next-client'
 
 import { TestResult } from '@/types/test-result'
+import { Routine } from '@/types/testray'
 import { User } from '@/types/user'
 
 export function AssigneeSelect({
 	testResult,
 	users,
+	routineId,
 }: {
 	testResult: TestResult
 	users: User[]
+	routineId: Routine['id']
 }) {
 	const initialUserId = testResult.userId
 
@@ -45,6 +48,7 @@ export function AssigneeSelect({
 
 		const { error } = await NextClient.patch('/api/update-case-result', {
 			id: testResult.caseResultId,
+			routineId,
 			userId: nextUserId,
 		})
 

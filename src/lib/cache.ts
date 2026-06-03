@@ -53,6 +53,14 @@ export async function writeCache(
 	}
 }
 
+export async function invalidate(routineId: Routine['id']): Promise<void> {
+	try {
+		await fs.rm(cacheFile(routineId, today()), { force: true })
+	} catch (e) {
+		console.error(e)
+	}
+}
+
 async function cleanup(): Promise<void> {
 	const suffix = `-${today()}.json`
 
