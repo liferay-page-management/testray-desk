@@ -45,3 +45,6 @@ next-env.d.ts
 
 # update-case-results state
 .last-reported-build-id
+
+# routine results cache
+/.cache
