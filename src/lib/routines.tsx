@@ -44,7 +44,7 @@ export const ROUTINES: Record<string, Routine> = {
 		users: [
 			{ id: 5125486, name: 'Jürgen' },
 			{ id: 5677028, name: 'Mikel' },
-			{ id: 243081656, name: 'Roseline' },
+			{ id: 243081656, name: 'Roselaine' },
 			{ id: 9459540, name: 'Vero' },
 		],
 	},
