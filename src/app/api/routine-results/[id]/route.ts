@@ -1,3 +1,4 @@
+import { getRoutineBuilds } from '@/services/build'
 import { NextResponse } from 'next/server'
 
 import { readCache, writeCache } from '@/lib/cache'
@@ -13,10 +14,14 @@ export const GET = nextRoute({
 
 		const routineId = Number(id)
 
-		const cached = await readCache(routineId)
+		const [latestBuild] = await getRoutineBuilds({ routineId, limit: 1 })
 
-		if (cached) {
-			return NextResponse.json(cached)
+		if (latestBuild) {
+			const cached = await readCache(routineId, latestBuild.id)
+
+			if (cached) {
+				return NextResponse.json(cached)
+			}
 		}
 
 		const data = await getRoutineResults(routineId)

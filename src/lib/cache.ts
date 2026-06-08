@@ -11,25 +11,17 @@ export type CacheItem = {
 
 const CACHE_DIR = path.join(process.cwd(), '.cache', 'routine-results')
 
-function today(): string {
-	const now = new Date()
-	const year = now.getFullYear()
-	const month = String(now.getMonth() + 1).padStart(2, '0')
-	const day = String(now.getDate()).padStart(2, '0')
-
-	return `${year}-${month}-${day}`
-}
-
-function cacheFile(routineId: Routine['id'], date: string): string {
-	return path.join(CACHE_DIR, `${routineId}-${date}.json`)
+function cacheFile(routineId: Routine['id'], buildId: Build['id']): string {
+	return path.join(CACHE_DIR, `${routineId}-${buildId}.json`)
 }
 
 export async function readCache(
-	routineId: Routine['id']
+	routineId: Routine['id'],
+	buildId: Build['id']
 ): Promise<CacheItem | null> {
 	try {
 		const content = await fs.readFile(
-			cacheFile(routineId, today()),
+			cacheFile(routineId, buildId),
 			'utf-8'
 		)
 
@@ -45,9 +37,12 @@ export async function writeCache(
 ): Promise<void> {
 	try {
 		await fs.mkdir(CACHE_DIR, { recursive: true })
-		await fs.writeFile(cacheFile(routineId, today()), JSON.stringify(data))
+		await fs.writeFile(
+			cacheFile(routineId, data.build.id),
+			JSON.stringify(data)
+		)
 
-		await cleanup()
+		await cleanup(routineId, data.build.id)
 	} catch (e) {
 		console.error(e)
 	}
@@ -55,20 +50,25 @@ export async function writeCache(
 
 export async function invalidate(routineId: Routine['id']): Promise<void> {
 	try {
-		await fs.rm(cacheFile(routineId, today()), { force: true })
+		await cleanup(routineId)
 	} catch (e) {
 		console.error(e)
 	}
 }
 
-async function cleanup(): Promise<void> {
-	const suffix = `-${today()}.json`
+async function cleanup(
+	routineId: Routine['id'],
+	keepBuildId?: Build['id']
+): Promise<void> {
+	const prefix = `${routineId}-`
+	const keep =
+		keepBuildId !== undefined ? `${routineId}-${keepBuildId}.json` : null
 
 	const files = await fs.readdir(CACHE_DIR)
 
 	await Promise.all(
 		files
-			.filter((file) => !file.endsWith(suffix))
+			.filter((file) => file.startsWith(prefix) && file !== keep)
 			.map((file) => fs.rm(path.join(CACHE_DIR, file), { force: true }))
 	)
 }
