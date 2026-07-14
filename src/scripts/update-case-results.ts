@@ -33,7 +33,7 @@ function writeLastReportedBuildId(routineKey: string, id: Build['id']): void {
 async function updateCaseResults(routineKey: string) {
 	const routine = ROUTINES[routineKey]
 
-	const [lastBuild, previousDayBuild] = await getRoutineBuilds({
+	const [lastBuild, previousBuild] = await getRoutineBuilds({
 		routineId: routine.routineId,
 		limit: 2,
 	})
@@ -44,14 +44,24 @@ async function updateCaseResults(routineKey: string) {
 		return
 	}
 
-	if (readLastReportedBuildId(routineKey) === lastBuild.id) {
+	const lastReportedId = readLastReportedBuildId(routineKey)
+
+	if (lastReportedId === lastBuild.id) {
 		process.stdout.write('false')
 
 		return
 	}
 
-	const previousDayIssues = await getBuildCaseResults({
-		buildId: previousDayBuild.id,
+	const sourceBuildId = lastReportedId ?? previousBuild?.id
+
+	if (!sourceBuildId) {
+		process.stdout.write('false')
+
+		return
+	}
+
+	const previousIssues = await getBuildCaseResults({
+		buildId: sourceBuildId,
 		statuses: ['FAILED', 'BLOCKED', 'UNTESTED'],
 	})
 
@@ -61,7 +71,7 @@ async function updateCaseResults(routineKey: string) {
 	})
 
 	for (const caseResult of caseResults) {
-		await inheritMetadata(previousDayIssues, caseResult)
+		await inheritMetadata(previousIssues, caseResult)
 	}
 
 	writeLastReportedBuildId(routineKey, lastBuild.id)
