@@ -23,6 +23,7 @@ export const ROUTINES: Record<string, Routine> = {
 			{ id: 9607391, name: 'Rubén' },
 			{ id: 44233335, name: 'Javi' },
 			{ id: 33780064, name: 'Lourdes' },
+			{ id: 566744355, name: 'Álvaro' },
 			{ id: 5383891, name: 'Sandro' },
 		],
 	},
