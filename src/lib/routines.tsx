@@ -31,6 +31,7 @@ export const ROUTINES: Record<string, Routine> = {
 		name: 'CMS',
 		routineId: 336020509,
 		users: [
+			{ id: 565416326, name: 'David' },
 			{ id: 296022095, name: 'Jan' },
 			{ id: 5125486, name: 'Jürgen' },
 			{ id: 5677028, name: 'Mikel' },
@@ -43,6 +44,7 @@ export const ROUTINES: Record<string, Routine> = {
 		name: 'Content Management',
 		routineId: 1021677,
 		users: [
+			{ id: 565416326, name: 'David' },
 			{ id: 296022095, name: 'Jan' },
 			{ id: 5125486, name: 'Jürgen' },
 			{ id: 5677028, name: 'Mikel' },
