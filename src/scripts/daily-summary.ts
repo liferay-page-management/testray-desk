@@ -33,6 +33,8 @@ const TESTRAY_DESK_URL = 'https://testray-desk.liferay.org.es'
 
 const MAX_COMMENT_LENGTH = 200
 
+const MAX_BLOCKS_PER_MESSAGE = 50
+
 const ROUTINE_KEYS = ['page-management', 'cms']
 
 function getLastProcessedSummaryBuildIdFile(routineKey: string): string {
@@ -127,6 +129,22 @@ function buildThreadBlocks(
 	)
 
 	return blocks
+}
+
+async function postThreadBlocks(
+	channel: string,
+	threadTs: string,
+	text: string,
+	blocks: KnownBlock[]
+): Promise<void> {
+	for (let i = 0; i < blocks.length; i += MAX_BLOCKS_PER_MESSAGE) {
+		await slack.chat.postMessage({
+			channel,
+			thread_ts: threadTs,
+			text,
+			blocks: blocks.slice(i, i + MAX_BLOCKS_PER_MESSAGE),
+		})
+	}
 }
 
 function escapeSlackText(text: string): string {
@@ -251,33 +269,33 @@ async function processRoutine(routineKey: string): Promise<void> {
 	})
 
 	if (newFailures.length > 0 && parent.ts) {
-		await slack.chat.postMessage({
+		await postThreadBlocks(
 			channel,
-			thread_ts: parent.ts,
-			text: `New Failures (${newFailures.length})`,
-			blocks: buildThreadBlocks(
+			parent.ts,
+			`New Failures (${newFailures.length})`,
+			buildThreadBlocks(
 				'New Failures',
 				newFailures,
 				usersById,
 				routine.routineId,
 				build.id
-			),
-		})
+			)
+		)
 	}
 
 	if (existingFailures.length > 0 && parent.ts) {
-		await slack.chat.postMessage({
+		await postThreadBlocks(
 			channel,
-			thread_ts: parent.ts,
-			text: `Existing Failures (${existingFailures.length})`,
-			blocks: buildThreadBlocks(
+			parent.ts,
+			`Existing Failures (${existingFailures.length})`,
+			buildThreadBlocks(
 				'Existing Failures',
 				existingFailures,
 				usersById,
 				routine.routineId,
 				build.id
-			),
-		})
+			)
+		)
 	}
 
 	writeLastProcessedSummaryBuildId(routineKey, latestBuild.id)
